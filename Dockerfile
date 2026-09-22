@@ -1,8 +1,13 @@
-FROM debian:bookworm
+FROM debian:bullseye
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN dpkg --add-architecture i386
+
+# Reroute repositories to the Debian Archive
+RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list && \
+    sed -i 's|security.debian.org/debian-security|archive.debian.org/debian-security/|g' /etc/apt/sources.list && \
+    sed -i '/bullseye-updates/d' /etc/apt/sources.list
 
 RUN apt update && apt install -y \
     xrdp \
